@@ -1,0 +1,18 @@
+post_install() {
+  cp -rf /etc/creio-dots/dots /etc/skel
+
+  USER_NAME=$(cat /etc/passwd | grep "/home" | cut -d: -f1 | head -1)
+  if [ "$USER_NAME" != "liveuser" ]; then
+    chown -R $USER_NAME:users /etc/creio-dots
+    sudo -u ${USER_NAME} cp -rf /etc/creio-dots/dots/. /home/$USER_NAME/test
+    rm -rf /etc/creio-dots
+  fi
+}
+
+post_upgrade() {
+  post_install $1
+}
+
+#post_remove() {
+#  rm -rf /usr/share/backgrounds/xfce
+#}
